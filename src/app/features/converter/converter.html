@@ -1,0 +1,60 @@
+<main class="stage">
+  <header class="bar">
+    <h1>Currency<span>Flow</span></h1>
+    <button class="chip" type="button" (click)="theme.cycle()" aria-label="Change theme">
+      {{ theme.mode() === 'light' ? '☀️ Day' : theme.mode() === 'dark' ? '🌙 Night' : '✨ Auto' }}
+    </button>
+  </header>
+
+  <section class="card">
+    <label class="field">
+      <span>Amount</span>
+      <input inputmode="decimal" autocomplete="off" [value]="amountText()" (input)="onAmount($event)" />
+      <small class="hint">{{ sourceWords() }}</small>
+    </label>
+
+    <div class="pair">
+      <label class="field">
+        <span>From</span>
+        <select (change)="from.set(pick($event))">
+          @for (c of currencies(); track c.iso_code) {
+            <option [value]="c.iso_code" [selected]="c.iso_code === from()">{{ c.iso_code }} · {{ c.name }}</option>
+          }
+        </select>
+      </label>
+      <button class="swap" type="button" (click)="swap()" aria-label="Swap currencies">⇄</button>
+      <label class="field">
+        <span>To</span>
+        <select (change)="to.set(pick($event))">
+          @for (c of currencies(); track c.iso_code) {
+            <option [value]="c.iso_code" [selected]="c.iso_code === to()">{{ c.iso_code }} · {{ c.name }}</option>
+          }
+        </select>
+      </label>
+    </div>
+
+    <div class="result" aria-live="polite">
+      @switch (state().status) {
+        @case ('loading') { <p class="muted">Fetching latest rate…</p> }
+        @case ('error') { <p class="muted">Couldn't load rates. Check your connection and try again.</p> }
+        @default {
+          <p class="big">{{ convertedText() }}</p>
+          @if (resultWords()) {
+            <p class="words">{{ resultWords() }}</p>
+            <p class="muted">{{ resultFullWords() }}</p>
+          }
+          <p class="muted">{{ rateText() }}</p>
+        }
+      }
+    </div>
+
+    <div class="seg" role="group" aria-label="Number system">
+      <button type="button" [class.on]="targetSystem() === 'indian'" (click)="setSystem('indian')">Lakh / Crore</button>
+      <button type="button" [class.on]="targetSystem() === 'international'" (click)="setSystem('international')">Million / Billion</button>
+    </div>
+  </section>
+
+  <footer class="foot">
+    Mid-market reference rates from Frankfurter, updated daily. Not the rate your bank or card will charge.
+  </footer>
+</main>

@@ -1,0 +1,37 @@
+/* Registered colour properties let the sky cross-fade smoothly between day and night. */
+@property --sky-top { syntax: '<color>'; inherits: true; initial-value: #bfe6ff; }
+@property --sky-bottom { syntax: '<color>'; inherits: true; initial-value: #ffe9d6; }
+@property --blob-a { syntax: '<color>'; inherits: true; initial-value: #ffd28a; }
+@property --blob-b { syntax: '<color>'; inherits: true; initial-value: #ff9ec4; }
+@property --blob-c { syntax: '<color>'; inherits: true; initial-value: #8fd3ff; }
+
+:root {
+  --sky-top: #bfe6ff; --sky-bottom: #ffe9d6;
+  --blob-a: #ffd28a; --blob-b: #ff9ec4; --blob-c: #8fd3ff;
+  --day: 1; --night: 0;
+  --text: #1b2440; --muted: #55607f; --accent: #5a5cf0;
+  --glass: rgba(255, 255, 255, .55); --glass-border: rgba(255, 255, 255, .75); --field: rgba(255, 255, 255, .5);
+  color-scheme: light;
+  transition: --sky-top 1.2s ease, --sky-bottom 1.2s ease, --blob-a 1.2s ease, --blob-b 1.2s ease, --blob-c 1.2s ease;
+}
+
+:root[data-theme='dark'] {
+  --sky-top: #0b1030; --sky-bottom: #1c1745;
+  --blob-a: #4b3df0; --blob-b: #1f6fe0; --blob-c: #c2358a;
+  --day: 0; --night: 1;
+  --text: #eef1ff; --muted: #a3abd1; --accent: #7a7cff;
+  --glass: rgba(20, 24, 60, .45); --glass-border: rgba(255, 255, 255, .14); --field: rgba(255, 255, 255, .07);
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0; color: var(--text); transition: color 1.2s ease;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: linear-gradient(160deg, var(--sky-top), var(--sky-bottom)) fixed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+}
