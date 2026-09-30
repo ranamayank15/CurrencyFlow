@@ -7,50 +7,51 @@
   </header>
 
   <section class="card">
-    <label class="field">
-      <span>Amount</span>
-      <input inputmode="decimal" autocomplete="off" [value]="amountText()" (input)="onAmount($event)" />
-      <small class="hint">{{ sourceWords() }}</small>
-    </label>
-
-    <div class="pair">
-      <label class="field">
-        <span>From</span>
-        <select (change)="from.set(pick($event))">
+    @for (v of views(); track v.id) {
+      <div class="row" [class.active]="v.active">
+        <select class="cur" [attr.aria-label]="'Currency ' + ($index + 1)" (change)="setCode(v.id, pick($event))">
+          @if (!currencies().length) {
+            <option [value]="v.code" selected>{{ v.code }}</option>
+          }
           @for (c of currencies(); track c.iso_code) {
-            <option [value]="c.iso_code" [selected]="c.iso_code === from()">{{ c.iso_code }} · {{ c.name }}</option>
+            <option
+              [value]="c.iso_code"
+              [selected]="c.iso_code === v.code"
+              [disabled]="usedCodes().has(c.iso_code) && c.iso_code !== v.code"
+            >{{ c.iso_code }} · {{ c.name }}</option>
           }
         </select>
-      </label>
-      <button class="swap" type="button" (click)="swap()" aria-label="Swap currencies">⇄</button>
-      <label class="field">
-        <span>To</span>
-        <select (change)="to.set(pick($event))">
-          @for (c of currencies(); track c.iso_code) {
-            <option [value]="c.iso_code" [selected]="c.iso_code === to()">{{ c.iso_code }} · {{ c.name }}</option>
-          }
-        </select>
-      </label>
-    </div>
 
-    <div class="result" aria-live="polite">
-      @switch (state().status) {
-        @case ('loading') { <p class="muted">Fetching latest rate…</p> }
-        @case ('error') { <p class="muted">Couldn't load rates. Check your connection and try again.</p> }
-        @default {
-          <p class="big">{{ convertedText() }}</p>
-          @if (resultWords()) {
-            <p class="words">{{ resultWords() }}</p>
-            <p class="muted">{{ resultFullWords() }}</p>
-          }
-          <p class="muted">{{ rateText() }}</p>
-        }
+        <div class="amt">
+          <input
+            inputmode="decimal"
+            autocomplete="off"
+            placeholder="…"
+            [attr.aria-label]="v.code + ' amount'"
+            [value]="v.text"
+            (input)="onInput(v.id, $event)"
+          />
+          <small class="hint" [title]="v.fullWords">{{ v.words }}</small>
+        </div>
+
+        <button class="x" type="button" (click)="remove(v.id)" [disabled]="rows().length <= 2" [attr.aria-label]="'Remove ' + v.code">×</button>
+      </div>
+    }
+
+    <button class="add" type="button" (click)="add()" [disabled]="rows().length >= maxRows">＋ Add currency</button>
+
+    <p class="muted status" aria-live="polite">
+      @switch (status()) {
+        @case ('loading') { Fetching latest rates… }
+        @case ('error') { Couldn't load rates. <button class="link" type="button" (click)="reload()">Retry</button> }
+        @default { @if (rateDate()) { Rates of {{ rateDate() }} } }
       }
-    </div>
+    </p>
 
     <div class="seg" role="group" aria-label="Number system">
-      <button type="button" [class.on]="targetSystem() === 'indian'" (click)="setSystem('indian')">Lakh / Crore</button>
-      <button type="button" [class.on]="targetSystem() === 'international'" (click)="setSystem('international')">Million / Billion</button>
+      @for (o of systemOptions; track o.value) {
+        <button type="button" [class.on]="systemPref() === o.value" (click)="systemPref.set(o.value)">{{ o.label }}</button>
+      }
     </div>
   </section>
 

@@ -11,6 +11,7 @@
   --day: 1; --night: 0;
   --text: #1b2440; --muted: #55607f; --accent: #5a5cf0;
   --glass: rgba(255, 255, 255, .55); --glass-border: rgba(255, 255, 255, .75); --field: rgba(255, 255, 255, .5);
+  --option-bg: #ffffff;
   color-scheme: light;
   transition: --sky-top 1.2s ease, --sky-bottom 1.2s ease, --blob-a 1.2s ease, --blob-b 1.2s ease, --blob-c 1.2s ease;
 }
@@ -21,8 +22,13 @@
   --day: 0; --night: 1;
   --text: #eef1ff; --muted: #a3abd1; --accent: #7a7cff;
   --glass: rgba(20, 24, 60, .45); --glass-border: rgba(255, 255, 255, .14); --field: rgba(255, 255, 255, .07);
+  --option-bg: #1b1f4b;
   color-scheme: dark;
 }
+
+/* The native dropdown list ignores translucent field colours, so give options solid, themed colours. */
+select option { background: var(--option-bg); color: var(--text); }
+select option:disabled { color: var(--muted); }
 
 * { box-sizing: border-box; }
 html, body { height: 100%; }
