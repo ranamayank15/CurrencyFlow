@@ -46,3 +46,6 @@ input { font-size: 1.25rem; font-weight: 600; }
   .row { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: 'cur x' 'amt amt'; }
   .x { margin-top: 0; }
 }
+
+.brand { display: flex; align-items: center; gap: .65rem; }
+.logo { width: 40px; height: 40px; border-radius: 12px; box-shadow: 0 6px 18px -6px rgba(20, 20, 60, .45); }

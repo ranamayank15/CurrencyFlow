@@ -1,0 +1,40 @@
+:host { display: block; width: min(620px, 100%); }
+
+.panel { display: grid; gap: .8rem; padding: 1.25rem; border-radius: 28px; background: var(--glass);
+  border: 1px solid var(--glass-border); backdrop-filter: blur(28px) saturate(150%);
+  box-shadow: 0 24px 60px -24px rgba(20, 20, 60, .4); transition: background .6s ease; }
+
+.head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .5rem; }
+h2 { margin: 0; font-size: 1.05rem; span { font-weight: 400; color: var(--muted); } }
+.controls { display: flex; flex-wrap: wrap; gap: .5rem; }
+
+.seg { display: flex; gap: 4px; padding: 4px; border-radius: 999px; background: var(--field);
+  button { font: inherit; font-size: .8rem; color: inherit; cursor: pointer; border: 0; background: transparent;
+    border-radius: 999px; padding: .35rem .75rem; &.on { background: var(--accent); color: #fff; } } }
+
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; }
+.chip { display: inline-flex; align-items: center; gap: .4rem; font: inherit; font-size: .82rem; color: inherit; cursor: pointer;
+  padding: .35rem .7rem; border-radius: 999px; border: 1px solid var(--glass-border); background: var(--field);
+  i { width: .6rem; height: .6rem; border-radius: 50%; }
+  b { font-weight: 600; &.up { color: #3ecf8e; } &.down { color: #ff6b81; } }
+  &.off { opacity: .5; text-decoration: line-through;
+    i { background: transparent !important; border: 1.5px solid var(--muted); } } }
+
+.plot { min-height: 300px; display: grid; align-content: start; gap: .4rem; }
+.msg { place-self: center; margin: 0; color: var(--muted); font-size: .9rem; }
+.link { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+.readout { display: flex; flex-wrap: wrap; gap: .25rem .9rem; margin: 0; min-height: 2.4em; font-size: .82rem;
+  .date { color: var(--muted); width: 100%; }
+  .item { display: inline-flex; align-items: center; gap: .35rem; font-weight: 600; }
+  i { width: .55rem; height: .55rem; border-radius: 50%; } }
+
+.chart { display: block; width: 100%; touch-action: pan-y; }
+.grid { stroke: var(--glass-border); stroke-width: 1; }
+.zero { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 4 4; opacity: .7; }
+.tick { fill: var(--muted); font-size: 11px; }
+.plabel { fill: var(--text); font-size: 12px; font-weight: 700; }
+.cursor { stroke: var(--muted); stroke-width: 1; }
+.dot { stroke: #fff; stroke-width: 1.5; }
+
+.note { margin: 0; font-size: .75rem; color: var(--muted); text-align: center; }

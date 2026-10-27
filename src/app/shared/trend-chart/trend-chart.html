@@ -1,0 +1,93 @@
+<section class="panel">
+  <header class="head">
+    <h2>
+      @if (mode() === 'pct') { Trend <span>vs {{ base() }}</span> }
+      @else { Rate <span>per 1 {{ base() }}</span> }
+    </h2>
+    <div class="controls">
+      <div class="seg" role="group" aria-label="Chart type">
+        @for (m of modes; track m.value) {
+          <button type="button" [class.on]="mode() === m.value" (click)="setMode(m.value)">{{ m.label }}</button>
+        }
+      </div>
+      <div class="seg" role="group" aria-label="Time range">
+        @for (r of ranges; track r.days) {
+          <button type="button" [class.on]="days() === r.days" (click)="setRange(r.days)">{{ r.label }}</button>
+        }
+      </div>
+    </div>
+  </header>
+
+  <div class="chips">
+    @for (c of chips(); track c.code) {
+      <button
+        type="button" class="chip" [class.off]="c.off" [attr.aria-pressed]="!c.off"
+        [title]="c.off ? 'Show on graph' : 'Hide from graph'" (click)="toggle(c.code)"
+      >
+        <i [style.background]="c.color"></i>{{ c.code }}
+        <b [class.up]="c.up" [class.down]="!c.up">{{ c.text }}</b>
+      </button>
+    }
+  </div>
+
+  <div class="plot" #plot>
+    @switch (data().status) {
+      @case ('loading') { <p class="msg">Loading trend…</p> }
+      @case ('error') {
+        <p class="msg">Couldn't load history. <button class="link" type="button" (click)="retry()">Retry</button></p>
+      }
+      @default {
+        @if (geo(); as g) {
+          @if (readout(); as r) {
+            <p class="readout">
+              <span class="date">{{ r.date }}</span>
+              @for (it of r.items; track it.code) {
+                <span class="item"><i [style.background]="it.color"></i>{{ it.code }} {{ it.text }}</span>
+              }
+            </p>
+          }
+          <svg
+            class="chart" [attr.viewBox]="'0 0 ' + width() + ' ' + g.height" [attr.height]="g.height"
+            role="img"
+            [attr.aria-label]="(mode() === 'pct' ? 'Percentage change' : 'Exchange rate') + ' of currencies against ' + base()"
+            (pointermove)="onMove($event)" (pointerleave)="clearHover()"
+          >
+            @for (p of g.panels; track $index) {
+              @if (p.label) {
+                <circle [attr.cx]="L + 4" [attr.cy]="p.labelY - 4" r="4" [attr.fill]="p.color" />
+                <text class="plabel" [attr.x]="L + 14" [attr.y]="p.labelY">{{ p.label }}</text>
+              }
+              @for (t of p.yTicks; track $index) {
+                <line class="grid" [attr.x1]="L" [attr.x2]="width() - R" [attr.y1]="t.y" [attr.y2]="t.y" />
+                <text class="tick" [attr.x]="L - 8" [attr.y]="t.y" text-anchor="end" dy=".32em">{{ t.label }}</text>
+              }
+              @if (p.zero !== null) {
+                <line class="zero" [attr.x1]="L" [attr.x2]="width() - R" [attr.y1]="p.zero" [attr.y2]="p.zero" />
+              }
+              @for (s of p.paths; track s.code) {
+                <path [attr.d]="s.d" [attr.stroke]="s.color" fill="none" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" />
+              }
+            }
+            @for (t of g.xTicks; track $index) {
+              <text class="tick" [attr.x]="t.x" [attr.y]="g.height - 8" [attr.text-anchor]="$first ? 'start' : $last ? 'end' : 'middle'">{{ t.label }}</text>
+            }
+            @if (cursor(); as c) {
+              <line class="cursor" [attr.x1]="c.x" [attr.x2]="c.x" [attr.y1]="T" [attr.y2]="g.height - B" />
+              @for (d of c.dots; track d.code) {
+                <circle class="dot" [attr.cx]="c.x" [attr.cy]="d.cy" r="4.5" [attr.fill]="d.color" />
+              }
+            }
+          </svg>
+        } @else {
+          <p class="msg">Tap a currency above to show it on the graph.</p>
+        }
+      }
+    }
+  </div>
+
+  @if (mode() === 'pct') {
+    <p class="note">Up means 1 {{ base() }} buys more of that currency than at the start of the period.</p>
+  } @else {
+    <p class="note">Each currency has its own scale, so compare the shape rather than the height. Green / red = rate up / down over the period.</p>
+  }
+</section>

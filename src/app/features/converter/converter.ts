@@ -4,6 +4,7 @@ import { catchError, forkJoin, of, switchMap, tap } from 'rxjs';
 import { Currency, ExchangeRateService, Rate } from '../../core/services/exchange-rate.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { NumberSystem, toCompactWords, toFullWords } from '../../core/utils/number-words';
+import { TrendChart } from '../../shared/trend-chart/trend-chart';
 
 interface Row { id: number; code: string; }
 interface RowView {
@@ -21,6 +22,7 @@ const ROWS_KEY = 'currency-flow:rows';
 
 @Component({
   selector: 'app-converter',
+  imports: [TrendChart],
   templateUrl: './converter.html',
   styleUrl: './converter.scss',
 })
@@ -54,6 +56,10 @@ export class Converter {
   protected readonly rateDate = signal('');
 
   protected readonly usedCodes = computed(() => new Set(this.rows().map((r) => r.code)));
+  protected readonly codes = computed(() => this.rows().map((r) => r.code));
+  protected readonly activeCode = computed(
+    () => (this.rows().find((r) => r.id === this.activeId()) ?? this.rows()[0]).code,
+  );
   private readonly fetchKey = computed(
     () => `${[...this.usedCodes()].sort().join(',')}|${this.reloadTick()}`,
   );
