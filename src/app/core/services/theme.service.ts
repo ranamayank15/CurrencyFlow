@@ -1,7 +1,10 @@
 import { Injectable, computed, effect, signal } from '@angular/core';
 
-export type ThemeMode = 'system' | 'light' | 'dark';
+export type ThemeMode = 'system' | 'light' | 'dark' | 'cloudy';
+export type ResolvedTheme = 'light' | 'dark' | 'cloudy';
 const KEY = 'currency-flow:theme';
+// Cloudy is the default; the cycle order follows this list.
+const MODES: ThemeMode[] = ['cloudy', 'light', 'dark', 'system'];
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
@@ -9,7 +12,7 @@ export class ThemeService {
   private readonly systemDark = signal(this.media.matches);
 
   readonly mode = signal<ThemeMode>(this.stored());
-  readonly theme = computed<'light' | 'dark'>(() => {
+  readonly theme = computed<ResolvedTheme>(() => {
     const m = this.mode();
     return m === 'system' ? (this.systemDark() ? 'dark' : 'light') : m;
   });
@@ -27,17 +30,16 @@ export class ThemeService {
   }
 
   cycle(): void {
-    const order: ThemeMode[] = ['system', 'light', 'dark'];
-    this.mode.update((m) => order[(order.indexOf(m) + 1) % order.length]);
+    this.mode.update((m) => MODES[(MODES.indexOf(m) + 1) % MODES.length]);
   }
 
   private stored(): ThemeMode {
     try {
-      const v = localStorage.getItem(KEY);
-      if (v === 'light' || v === 'dark' || v === 'system') return v;
+      const v = localStorage.getItem(KEY) as ThemeMode | null;
+      if (v && MODES.includes(v)) return v;
     } catch {
       /* ignore */
     }
-    return 'system';
+    return 'cloudy';
   }
 }

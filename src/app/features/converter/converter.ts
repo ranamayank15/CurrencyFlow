@@ -15,7 +15,7 @@ type SystemPref = 'auto' | NumberSystem;
 
 // Currencies where people naturally say lakh / crore.
 const LAKH_CURRENCIES = new Set(['INR', 'PKR', 'NPR', 'BDT', 'LKR']);
-const DEFAULT_CODES = ['SGD', 'INR', 'USD', 'MYR'];
+const DEFAULT_CODES = ['SGD', 'INR', 'USD'];
 const SUGGESTED = ['EUR', 'GBP', 'JPY', 'AUD', 'AED', 'CAD', 'CHF', 'CNY', 'HKD', 'THB'];
 const MAX_ROWS = 10;
 const ROWS_KEY = 'currency-flow:rows';

@@ -7,7 +7,7 @@ A fluid, day/night currency converter that also says the amount in words
 
 ```bash
 npm install
-npm start          # http://localhost:4200
+npm start          # http://localhost:4600
 npm test           # Vitest unit tests
 npm run build      # output in dist/currency-flow/browser
 ```

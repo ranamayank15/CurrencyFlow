@@ -68,7 +68,10 @@
               "buildTarget": "currency-flow:build:development"
             }
           },
-          "defaultConfiguration": "development"
+          "defaultConfiguration": "development",
+          "options": {
+            "port": 4600 
+          }
         },
         "test": {
           "builder": "@angular/build:unit-test"

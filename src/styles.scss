@@ -1,27 +1,50 @@
-/* Registered colour properties let the sky cross-fade smoothly between day and night. */
-@property --sky-top { syntax: '<color>'; inherits: true; initial-value: #bfe6ff; }
-@property --sky-bottom { syntax: '<color>'; inherits: true; initial-value: #ffe9d6; }
-@property --blob-a { syntax: '<color>'; inherits: true; initial-value: #ffd28a; }
-@property --blob-b { syntax: '<color>'; inherits: true; initial-value: #ff9ec4; }
-@property --blob-c { syntax: '<color>'; inherits: true; initial-value: #8fd3ff; }
+/* Registered colour properties let the sky cross-fade smoothly between themes. */
+@property --sky-top { syntax: '<color>'; inherits: true; initial-value: #6e7d94; }
+@property --sky-bottom { syntax: '<color>'; inherits: true; initial-value: #3f4a5c; }
+@property --blob-a { syntax: '<color>'; inherits: true; initial-value: #8fa0b8; }
+@property --blob-b { syntax: '<color>'; inherits: true; initial-value: #5f6f86; }
+@property --blob-c { syntax: '<color>'; inherits: true; initial-value: #a9b6c9; }
+@property --cloud-hi { syntax: '<color>'; inherits: true; initial-value: rgba(255, 255, 255, .55); }
+@property --cloud-mid { syntax: '<color>'; inherits: true; initial-value: rgba(235, 240, 247, .35); }
+@property --cloud-lo { syntax: '<color>'; inherits: true; initial-value: rgba(160, 172, 190, .3); }
 
+/* ROOT = CLOUDY (default). Layer switches read by <app-background>:
+   --day sun · --night stars/moon · --cloud cloud layer · --overcast extra heavy clouds · --rain · --haze horizon glow */
 :root {
-  --sky-top: #bfe6ff; --sky-bottom: #ffe9d6;
-  --blob-a: #ffd28a; --blob-b: #ff9ec4; --blob-c: #8fd3ff;
-  --day: 1; --night: 0;
-  --text: #1b2440; --muted: #55607f; --accent: #5a5cf0;
-  --glass: rgba(255, 255, 255, .55); --glass-border: rgba(255, 255, 255, .75); --field: rgba(255, 255, 255, .5);
-  --option-bg: #ffffff;
-  color-scheme: light;
-  transition: --sky-top 1.2s ease, --sky-bottom 1.2s ease, --blob-a 1.2s ease, --blob-b 1.2s ease, --blob-c 1.2s ease;
+  --sky-top: #6e7d94; --sky-bottom: #3f4a5c;
+  --blob-a: #8fa0b8; --blob-b: #5f6f86; --blob-c: #a9b6c9; --blob-o: .7;
+  --cloud-hi: rgba(255, 255, 255, .55); --cloud-mid: rgba(235, 240, 247, .35); --cloud-lo: rgba(160, 172, 190, .3);
+  --day: 0; --night: 0; --cloud: 1; --overcast: 1; --rain: 1; --haze: 0;
+  --text: #ffffff; --muted: #c9d3e2;
+  --accent: #5b7be0;            /* buttons, borders: white text on it stays readable */
+  --hint: #d6e2ff;              /* the "in words" text: light, for dark glass */
+  --glass: rgba(22, 30, 46, .58); --glass-border: rgba(255, 255, 255, .22); --field: rgba(255, 255, 255, .09);
+  --option-bg: #2f3a4e;
+  color-scheme: dark;
+  transition: --sky-top 1.2s ease, --sky-bottom 1.2s ease, --blob-a 1.2s ease, --blob-b 1.2s ease, --blob-c 1.2s ease,
+    --cloud-hi 1.2s ease, --cloud-mid 1.2s ease, --cloud-lo 1.2s ease;
 }
 
-:root[data-theme='dark'] {
-  --sky-top: #0b1030; --sky-bottom: #1c1745;
-  --blob-a: #4b3df0; --blob-b: #1f6fe0; --blob-c: #c2358a;
-  --day: 0; --night: 1;
-  --text: #eef1ff; --muted: #a3abd1; --accent: #7a7cff;
-  --glass: rgba(20, 24, 60, .45); --glass-border: rgba(255, 255, 255, .14); --field: rgba(255, 255, 255, .07);
+/* DAY: clean, clear blue sky (think Apple Weather on a low-AQI day): vivid blue, warm sun, a few bright white clouds. */
+[data-theme='light'] {
+  --sky-top: #2f8fe8; --sky-bottom: #bfe6ff;
+  --blob-a: #ffe9a0; --blob-b: #6fb8ff; --blob-c: #ffffff; --blob-o: .55;
+  --cloud-hi: rgba(255, 255, 255, .95); --cloud-mid: rgba(255, 255, 255, .6); --cloud-lo: rgba(226, 241, 255, .55);
+  --day: 1; --night: 0; --cloud: 1; --overcast: 0; --rain: 0; --haze: .5;
+  --text: #14213d; --muted: #4a5a7a; --accent: #3a63e0; --hint: #2a4fc8;
+  --glass: rgba(255, 255, 255, .6); --glass-border: rgba(255, 255, 255, .8); --field: rgba(255, 255, 255, .55);
+  --option-bg: #ffffff;
+  color-scheme: light;
+}
+
+/* NIGHT: deep navy, real stars, a Milky Way smear, a lit moon, the odd shooting star. */
+[data-theme='dark'] {
+  --sky-top: #040818; --sky-bottom: #1d2c5e;
+  --blob-a: #1b2d78; --blob-b: #14336a; --blob-c: #35286b; --blob-o: .4;
+  --cloud-hi: rgba(150, 168, 215, .35); --cloud-mid: rgba(110, 128, 180, .2); --cloud-lo: rgba(80, 96, 150, .18);
+  --day: 0; --night: 1; --cloud: .45; --overcast: 0; --rain: 0; --haze: .12;
+  --text: #eef1ff; --muted: #a3abd1; --accent: #7a7cff; --hint: #b9c0ff;
+  --glass: rgba(14, 20, 52, .5); --glass-border: rgba(255, 255, 255, .14); --field: rgba(255, 255, 255, .07);
   --option-bg: #1b1f4b;
   color-scheme: dark;
 }
